@@ -60,6 +60,8 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.delete(getReservationFromDatabaseById(id));
     }
 
+
+
     private Reservation getReservationFromDatabaseById(final Long id) {
         final Optional<Reservation> reservationFromDatabase = reservationRepository.findById(id);
         return reservationFromDatabase.orElseThrow(()-> new NotFoundException("Reservation with given id not found"));

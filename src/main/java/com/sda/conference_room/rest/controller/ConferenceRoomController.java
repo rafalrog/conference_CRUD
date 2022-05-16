@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,9 +24,10 @@ public class ConferenceRoomController {
         return ResponseEntity.ok(conferenceRooms);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ConferenceRoomDto> getConferenceRoomById(@PathVariable("id") final Long id) {
         ConferenceRoomDto conferenceRoom = conferenceRoomService.getConferenceRoomById(id);
+
         return ResponseEntity.ok(conferenceRoom);
     }
 

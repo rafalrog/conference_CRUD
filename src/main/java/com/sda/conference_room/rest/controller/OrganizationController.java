@@ -1,6 +1,8 @@
 package com.sda.conference_room.rest.controller;
+
+import com.sda.conference_room.exception.NotFoundException;
 import com.sda.conference_room.model.dto.OrganizationDto;
-import com.sda.conference_room.model.entity.Organization;
+import com.sda.conference_room.model.entity.User;
 import com.sda.conference_room.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -42,4 +45,11 @@ public class OrganizationController {
         organizationService.deleteOrganizationById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/allUsers/{org}")
+    public ResponseEntity<List<User>> getAllUsers(@PathVariable("org") String organizationName){
+        
+        return ResponseEntity.ok().body(organizationService.getAllUsersOfOrganization(organizationName));
+    }
+
 }

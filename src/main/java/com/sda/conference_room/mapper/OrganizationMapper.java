@@ -9,7 +9,6 @@ public class OrganizationMapper {
         return Organization.builder()
                 .withId(dto.getId())
                 .withName(dto.getName())
-                .withPassword((dto.getPassword()))
                 .build();
     }
 
@@ -17,7 +16,6 @@ public class OrganizationMapper {
         return OrganizationDto.builder()
                 .withId(organization.getId())
                 .withName(organization.getName())
-                .withPassword(organization.getPassword())
                 .build();
     }
 }

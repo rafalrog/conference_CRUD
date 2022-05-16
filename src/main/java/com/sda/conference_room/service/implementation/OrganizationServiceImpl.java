@@ -5,7 +5,9 @@ import com.sda.conference_room.exception.NotFoundException;
 import com.sda.conference_room.mapper.OrganizationMapper;
 import com.sda.conference_room.model.dto.OrganizationDto;
 import com.sda.conference_room.model.entity.Organization;
+import com.sda.conference_room.model.entity.User;
 import com.sda.conference_room.repository.OrganizationRepository;
+import com.sda.conference_room.repository.UserRepository;
 import com.sda.conference_room.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +25,12 @@ import java.util.stream.Collectors;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+    private final UserRepository userRepository;
 
     @Override
     public OrganizationDto saveOrganization(OrganizationDto organizationDto) {
-        Organization organizationFromDb = organizationRepository.findOrganizationByName(organizationDto.getName());
-        if (organizationFromDb == null) {
+        Optional<Organization> organizationFromDb = organizationRepository.findOrganizationByName(organizationDto.getName());
+        if (organizationFromDb.isEmpty()) {
             Organization organizationToSave = OrganizationMapper.map(organizationDto);
             organizationRepository.save(organizationToSave);
             log.info("Organization with name {} saved", organizationToSave.getName());
@@ -38,6 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationDto> getALlOrganizations() {
+        System.out.println(organizationRepository.findAll());
         return organizationRepository.findAll()
                 .stream()
                 .map(OrganizationMapper::map)
@@ -64,6 +68,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     public void deleteOrganizationById(Long organizationId) {
         organizationRepository.delete(getOrganizationFromDbById(organizationId));
         log.info("Organization with id {} deleted", organizationId);
+    }
+
+    @Override
+    public Organization getOrganizationByName(String name) {
+        return organizationRepository.findOrganizationByName(name).orElseThrow(() -> new NotFoundException("Organization with that name not found"));
+    }
+
+    @Override
+    public List<User> getAllUsersOfOrganization(String organizationName) {
+        return  userRepository.findAllByOrganization(getOrganizationByName(organizationName));
     }
 
     private Organization getOrganizationFromDbById(Long organizationId) {
